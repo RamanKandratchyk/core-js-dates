@@ -149,8 +149,18 @@ function isDateInPeriod(date, period) {
  * '1999-01-05T02:20:00.000Z' => '1/5/1999, 2:20:00 AM'
  * '2010-12-15T22:59:00.000Z' => '12/15/2010, 10:59:00 PM'
  */
-function formatDate(/* date */) {
-  throw new Error('Not implemented');
+function formatDate(date) {
+  const formatter = new Intl.DateTimeFormat('en', {
+    month: 'numeric',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    hour12: 'true',
+    timeZone: 'UTC',
+  });
+  return formatter.format(new Date(date));
 }
 
 /**
@@ -165,8 +175,16 @@ function formatDate(/* date */) {
  * 12, 2023 => 10
  * 1, 2024 => 8
  */
-function getCountWeekendsInMonth(/* month, year */) {
-  throw new Error('Not implemented');
+function getCountWeekendsInMonth(month, year) {
+  let weekdaysCount = 0;
+  let currDay = 1;
+  const currDate = new Date(year, month - 1, currDay);
+  do {
+    const day = currDate.getDay();
+    if (day === 0 || day === 6) weekdaysCount += 1;
+    currDate.setDate((currDay += 1));
+  } while (currDate.getMonth() === month - 1);
+  return weekdaysCount;
 }
 
 /**
