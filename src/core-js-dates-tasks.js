@@ -208,17 +208,23 @@ function getWeekNumberByDate(date) {
     firstDateInYear.getTime() - timeOffset
   );
 
-  const firstSaturdayInYear = new Date(
+  const firstSundayInYear = new Date(
     firstDateInYearOffset.getUTCFullYear(),
     0,
-    1 + (6 - firstDateInYearOffset.getUTCDay())
+    1 +
+      (firstDateInYearOffset.getUTCDay() === 0
+        ? 0
+        : 7 - firstDateInYearOffset.getUTCDay())
+  );
+  const firstSundayInYearOffset = new Date(
+    firstSundayInYear.getTime() - timeOffset
   );
 
   let weekCount = 1;
-  const curSaturday = firstSaturdayInYear;
-  while (curSaturday.getTime() < inputTime) {
+  const curSunday = firstSundayInYearOffset;
+  while (curSunday.getTime() < inputTime) {
     weekCount += 1;
-    curSaturday.setUTCDate(curSaturday.getUTCDate() + 7);
+    curSunday.setUTCDate(curSunday.getUTCDate() + 7);
   }
   return weekCount;
 }
