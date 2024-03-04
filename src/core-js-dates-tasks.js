@@ -228,8 +228,19 @@ function getWeekNumberByDate(date) {
  * Date(2024, 0, 13) => Date(2024, 8, 13)
  * Date(2023, 1, 1) => Date(2023, 9, 13)
  */
-function getNextFridayThe13th(/* date */) {
-  throw new Error('Not implemented');
+function getNextFridayThe13th(date) {
+  const firstFridayAfterDate = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate() +
+      (5 - date.getDay() > 0 ? 5 - date.getDay() : 12 - date.getDay())
+  );
+
+  const currFriday = firstFridayAfterDate;
+  while (currFriday.getDate() !== 13) {
+    currFriday.setDate(currFriday.getDate() + 7);
+  }
+  return currFriday;
 }
 
 /**
@@ -243,8 +254,8 @@ function getNextFridayThe13th(/* date */) {
  * Date(2024, 5, 1) => 2
  * Date(2024, 10, 10) => 4
  */
-function getQuarter(/* date */) {
-  throw new Error('Not implemented');
+function getQuarter(date) {
+  return Math.ceil((date.getMonth() + 1) / 3);
 }
 
 /**
@@ -265,8 +276,26 @@ function getQuarter(/* date */) {
  * { start: '01-01-2024', end: '15-01-2024' }, 1, 3 => ['01-01-2024', '05-01-2024', '09-01-2024', '13-01-2024']
  * { start: '01-01-2024', end: '10-01-2024' }, 1, 1 => ['01-01-2024', '03-01-2024', '05-01-2024', '07-01-2024', '09-01-2024']
  */
-function getWorkSchedule(/* period, countWorkDays, countOffDays */) {
-  throw new Error('Not implemented');
+function getWorkSchedule(period, countWorkDays, countOffDays) {
+  const workSchedule = [];
+  const currDate = new Date(period.start.split('-').reverse().join('-'));
+  const endDate = new Date(period.end.split('-').reverse().join('-'));
+  const formatter = new Intl.DateTimeFormat('ru', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
+
+  while (currDate <= endDate) {
+    for (let i = 1; i <= countWorkDays; i += 1) {
+      if (currDate <= endDate) {
+        workSchedule.push(formatter.format(currDate).replaceAll('.', '-'));
+      }
+      currDate.setDate(currDate.getDate() + 1);
+    }
+    currDate.setDate(currDate.getDate() + countOffDays);
+  }
+  return workSchedule;
 }
 
 /**
