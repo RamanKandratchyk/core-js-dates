@@ -199,21 +199,22 @@ function getCountWeekendsInMonth(month, year) {
  * Date(2024, 0, 31) => 5
  * Date(2024, 1, 23) => 8
  */
-function getWeekNumberByDate(/* date */) {
-  // const inputTime = date.getTime();
-  // const firstDateInYear = new Date(date.getUTCFullYear(), 0, 1);
-  // const firstSaturdayInYear = new Date(
-  //   date.getUTCFullYear(),
-  //   0,
-  //   1 + (6 - firstDateInYear.getUTCDay())
-  // );
-  // let weekCount = 1;
-  // const curSaturday = firstSaturdayInYear;
-  // while (curSaturday.getTime() < inputTime) {
-  //   weekCount += 1;
-  //   curSaturday.setUTCDate(curSaturday.getUTCDate() + 7);
-  // }
-  // return weekCount;
+function getWeekNumberByDate(date) {
+  const inputTime = date.getTime() + date.getTimezoneOffset() * 60 * 1000;
+  const firstDateInYear = new Date(date.getUTCFullYear(), 0, 1);
+  const firstSaturdayInYear = new Date(
+    date.getUTCFullYear(),
+    0,
+    1 + (6 - firstDateInYear.getUTCDay())
+  );
+
+  let weekCount = 1;
+  const curSaturday = firstSaturdayInYear;
+  while (curSaturday.getTime() < inputTime) {
+    weekCount += 1;
+    curSaturday.setUTCDate(curSaturday.getUTCDate() + 7);
+  }
+  return weekCount;
 }
 
 /**
